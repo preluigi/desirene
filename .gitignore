@@ -1,1 +1,5 @@
 /lib/vendor/
+/lib/Model/Base
+/lib/Model/Map
+/lib/Model/Rest
+/config/config.php
