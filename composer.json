@@ -16,5 +16,12 @@
         "monolog/monolog": "^1.21",
         "propel/propel": "~2.0@dev",
         "nette/mail": "^2.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Model\\": "lib/Model/",
+            "Controller\\": "controller/",
+            "Desirene\\": "lib/Desirene/"
+        }
     }
 }

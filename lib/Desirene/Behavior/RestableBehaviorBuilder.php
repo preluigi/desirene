@@ -1,34 +1,39 @@
 <?php
 namespace Desirene\Behavior;
+use \Propel\Generator\Builder\Om\AbstractOMBuilder;
 
-class RestableBehaviorBuilder extends \OMBuilder
+class RestableBehaviorBuilder extends AbstractOMBuilder
 {
-  public function getUnprefixedClassname()
+  public $overwrite = false;
+  
+  public function getUnprefixedClassName()
   {
-    return $this->getStubObjectBuilder()->getUnprefixedClassname() . 'Rest';
+    return $this->getStubObjectBuilder()->getUnprefixedClassName() . 'Rest';
   }
   
   protected function addClassOpen(&$script)
   {
     $script .= <<<eos
+use \\{$this->getNamespace()}\\Rest\\Base{$this->getUnprefixedClassName()} as Base{$this->getUnprefixedClassName()};
 /*
  * {$this->getClassname()} class.
  */
-class {$this->getClassname()} extends {$this->getStubObjectBuilder()}
+class {$this->getUnprefixedClassName()} extends Base{$this->getUnprefixedClassName()}
 {
+  
 eos;
   }
   
   protected function addClassBody(&$script)
   {
     $script .= <<<eos
-  //ToDo
 eos;
   }
   
   protected function addClassClose(&$script)
   {
     $script .= <<<eos
+
 }
 eos;
   }
