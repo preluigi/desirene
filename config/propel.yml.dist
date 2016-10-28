@@ -8,19 +8,33 @@
 
 propel:
     paths:
-        schemaDir: ./config
-        phpConfDir: ./config
-        migrationDir: ./lib/migrations
-        sqlDir: ./lib/sqls
-        phpDir: ./lib
-        composerDir: .
+        schemaDir: ../config
+        phpConfDir: ../config
+        migrationDir: ../lib/migrations
+        sqlDir: ../lib/sqls
+        phpDir: ../lib
+        composerDir: ..
         
 
 #   database:
 #       connections:
-#           default:
+#           dev:
 #               adapter: mysql
-#               dsn: mysql:host=localhost;port=3306;dbname=desirene_test
+#               dsn: mysql:host=localhost;port=3306;dbname=schema_name
+#               user: root
+#               password:
+#               settings:
+#                   charset: utf8
+#           stage:
+#               adapter: mysql
+#               dsn: mysql:host=localhost;port=3306;dbname=schema_name
+#               user: root
+#               password:
+#               settings:
+#                   charset: utf8
+#           prod:
+#               adapter: mysql
+#               dsn: mysql:host=localhost;port=3306;dbname=schema_name
 #               user: root
 #               password:
 #               settings:
