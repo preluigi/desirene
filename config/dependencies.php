@@ -1,0 +1,2 @@
+<?php
+$ci = $app->getContainer();
