@@ -2,4 +2,7 @@
 /lib/Model/Base
 /lib/Model/Map
 /lib/Model/Rest
-/config/config.php
+/config/databases.php
+/config/propel.yml
+/cache
+!/cache/.gitignore
