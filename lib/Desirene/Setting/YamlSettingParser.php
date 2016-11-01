@@ -11,16 +11,17 @@ class YamlSettingParser
     $this->cacheDir = $cacheDir;
   }
   
-  public function parse($file)
+  public function parse($file, $defaultSettings = [])
   {
     $filename = basename($file);
-    $cacheFilename = preg_replace("/(.*)\.([a-zA-Z0-9]+)$/", "$1.php", $filename);
+    $cacheFilename = preg_replace("/(.*)\.([a-zA-Z0-9]+)$/", "$1." . filemtime($file) . ".php", $filename);
     
     if(!file_exists($this->cacheDir . '/' . $cacheFilename))
     {
       try
       {
         $settings = Yaml::parse(file_get_contents($file));
+        $settings = array_replace_recursive($defaultSettings, (array)$settings);
         file_put_contents(
           $this->cacheDir . '/' . $cacheFilename,
           sprintf(

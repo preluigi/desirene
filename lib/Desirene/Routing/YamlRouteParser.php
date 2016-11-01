@@ -16,7 +16,7 @@ class YamlRouteParser
   public function parse($file)
   {
     $filename = basename($file);
-    $cacheFilename = preg_replace("/(.*)\.([a-zA-Z0-9]+)$/", "$1.php", $filename);
+    $cacheFilename = preg_replace("/(.*)\.([a-zA-Z0-9]+)$/", "$1." . filemtime($file) . ".php", $filename);
     
     if(!file_exists($this->cacheDir . '/' . $cacheFilename))
     {
@@ -39,6 +39,5 @@ class YamlRouteParser
       }
     }
     require $this->cacheDir . '/' . $cacheFilename;
-    return true;
   }
 }
