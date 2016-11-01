@@ -2,11 +2,15 @@
 require_once __DIR__.'/../lib/vendor/autoload.php';
 
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Console\Input\InputOption;
 
 use Propel\Runtime\Propel;
 use Propel\Generator\Application;
+
+if(!defined('ENV'))
+{
+  $env = getenv('DESIRENE_ENV') ?: 'dev';
+  define('ENV', $env);
+}
 
 $app = new Application('Desirene framework', 'v0.1');
 
@@ -33,10 +37,11 @@ foreach ($finder as $file) {
     if ($r->isSubclassOf('Symfony\\Component\\Console\\Command\\Command') && !$r->isAbstract()) {
         $cmd = $r->newInstance();
         $cmd->setName(sprintf("propel:%s", str_replace(":", "-", $cmd->getName())));
+        $cmd->setAliases([]);
         $options = $cmd->getDefinition()->getOptions();
         if(isset($options['config-dir']))
         {
-          $options['config-dir']->setDefault('../config');
+          $options['config-dir']->setDefault('../config/' . ENV);
           if(isset($options['output-file']))
           {
             $options['output-file']->setDefault('databases.php');
