@@ -4,6 +4,7 @@ use \Propel\Generator\Builder\Om\AbstractOMBuilder;
 
 class RestableBehaviorBaseBuilder extends AbstractOMBuilder
 {
+  const ROUTING_FILE = __DIR__ . '/../../../config/generated-routes.rest.yml';
   public function getPackage()
   {
     return parent::getPackage() . ".Rest";
@@ -42,6 +43,7 @@ eos;
     
 {$this->addRestMethods()}
 eos;
+    $this->generateRoutingFile();
   }
   
   protected function addClassClose(&$script)
@@ -50,6 +52,16 @@ eos;
   
 }
 eos;
+  }
+  
+  protected function generateRoutingFile()
+  {
+    $writer = RestableRoutes::getInstance(self::ROUTING_FILE);
+    
+    $baseRouteName = preg_replace('/([A-Z])/', "_$1", $this->getStubObjectBuilder()->getUnprefixedClassName());
+    $baseRouteName = strtolower($baseRouteName[0] == '_' ? substr($baseRouteName, 1) : $baseRouteName);
+    
+    $writer->writeRoutes($baseRouteName, $this->getStubObjectBuilder()->getClassName(), $this->getTable()->getPrimaryKey());
   }
   
   protected function addRestMethods()
@@ -126,7 +138,23 @@ eos;
 
   public static function patchAction(\$request, \$response, \$args)
   {
+    \$query = {$this->getStubQueryBuilder()->getUnprefixedClassName()}::create();
+    foreach(\$args as \$key => \$value)
+    {
+      \$filterMethod = 'filterBy' . str_replace(' ', '', ucwords(str_replace('_', ' ', \$key)));
+      if(method_exists(\$query, \$filterMethod))
+      {
+        \$query->\$filterMethod(\$value);
+      }
+    }
+    \$instance = \$query->findOne();
+    \$instance->importFrom('JSON', \$request->getBody()->getContents());
+    \$instance->save();
+    \$response->getBody()->write(
+      \$instance->toJSON(false)
+    );
     
+    return \$response->withHeader('Content-type', 'application/json');
   }
 
   public static function deleteAction(\$request, \$response, \$args)
