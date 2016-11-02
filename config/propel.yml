@@ -8,9 +8,16 @@ propel:
                 password: root
                 settings:
                     charset: utf8
+            stage:
+                adapter: mysql
+                dsn: mysql:host=localhost;port=3306;dbname=desirene_test2
+                user: root
+                password: root
+                settings:
+                    charset: utf8
             prod:
                 adapter: mysql
-                dsn: mysql:host=localhost;port=3306;dbname=desirene_test
+                dsn: mysql:host=localhost;port=3306;dbname=desirene_test3
                 user: root
                 password: root
                 settings:
