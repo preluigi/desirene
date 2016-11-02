@@ -1,6 +1,9 @@
 <?php
 define("ROOT_DIR",realpath(__DIR__ . '/../'));
-define("ENV", 'dev');
+if(!defined('ENV'))
+{
+  define("ENV", 'dev');
+}
 session_start();
 
 require __DIR__ . '/../lib/vendor/autoload.php';
