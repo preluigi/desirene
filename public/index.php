@@ -1,11 +1,12 @@
 <?php
 define("ROOT_DIR", __DIR__ . '/../');
+define("ENV", 'dev');
+session_start();
 
 require __DIR__ . '/../lib/vendor/autoload.php';
 
 require ROOT_DIR . '/lib/Desirene/config/databases.php';
 
-session_start();
 
 // Instantiate the app
 $settings = require __DIR__ . '/../lib/Desirene/config/settings.php';
