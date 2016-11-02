@@ -3,7 +3,7 @@ define("ROOT_DIR", __DIR__ . '/../');
 
 require __DIR__ . '/../lib/vendor/autoload.php';
 
-require __DIR__ . '/../config/databases.php';
+require ROOT_DIR . '/lib/Desirene/config/databases.php';
 
 session_start();
 
