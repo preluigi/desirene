@@ -23,7 +23,7 @@ class YamlSettingParser
       try
       {
         $settings = Yaml::parse(file_get_contents($file));
-        $managers = $settings['manager'] ?? [];
+        $managers = $settings['managers'] ?? [];
         $settings = $settings[$env] ?? null;
         if(!$settings)
         {

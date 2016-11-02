@@ -1,10 +1,10 @@
 managers:
-  logger: '\Desirene\Setting\LoggerSetting'
+  logger: '\Desirene\Setting\LoggerSettings'
 dev:
   settings:
     displayErrorDetails: true
     addContentLengthHeader: true
   logger:
     name: 'desirene-app'
-    path: '{ROOT_DIR}/logs/app.log'
+    path: 'logs/app.log'
     level: 'DEBUG'
