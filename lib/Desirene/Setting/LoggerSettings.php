@@ -1,13 +1,13 @@
 <?php
 namespace Desirene\Setting;
 
-class LoggerSetting
+class LoggerSettings
 {
   public static function parse($settings = [])
   {
     if(isset($settings['path']))
     {
-      $settings['path'] = ROOT_DIR . $settings['path'];
+      $settings['path'] = ROOT_DIR . '/' . $settings['path'];
     }
     if(isset($settings['level']))
     {
