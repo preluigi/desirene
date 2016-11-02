@@ -25,7 +25,7 @@ class YamlRouteParser
         $fpCacheFile = fopen($this->cacheDir . '/' . $cacheFilename, 'w');
         fwrite($fpCacheFile, "<?php\n");
         $routes = Yaml::parse(file_get_contents($file));
-        foreach($routes as $name => $config)
+        foreach((array)$routes as $name => $config)
         {
           $method = strtolower(isset($config['method']) ? $config['method'] : 'any');
           
