@@ -8,15 +8,29 @@ $outputFilePath = ROOT_DIR . '/cache/databases.php';
 
 if(!file_exists($outputFilePath))
 {
-  $options['connections'] = $configManager->getConnectionParametersArray();
-  $options['defaultConnection'] = $configManager->getSection('runtime')['defaultConnection'];
-  $options['log'] = $configManager->getSection('runtime')['log'];
-  $options['profiler'] = $configManager->getConfigProperty('runtime.profiler');
-
-  $phpConf = ArrayToPhpConverter::convert($options);
-  $phpConf = "<?php
-  " . $phpConf;
-
-  file_put_contents($outputFilePath, $phpConf);
+  $connections = $configManager->getConnectionParametersArray();
+  
+  $phpCode = "<?php\n\n";
+  
+  foreach($connections as $name => $connection)
+  {
+    $phpConf = ArrayToPhpConverter::convert([
+      'connections'       => [$name => $connection],
+      'defaultConnection' => $configManager->getSection('runtime')['defaultConnection'],
+      'log'               => $configManager->getSection('runtime')['log'],
+      'profiler'          => $configManager->getConfigProperty('runtime.profiler')
+    ]);
+    
+    $phpCode .= sprintf("\n\$connections['%s'] = function(){\n%s\n};\n", $name, $phpConf);
+  }
+  
+  file_put_contents($outputFilePath, $phpCode);
 }
-return require $outputFilePath;
+require $outputFilePath;
+
+$connection = $connections[ENV] ?? null;
+
+if(null !== $connection)
+{
+  $connection();
+}
