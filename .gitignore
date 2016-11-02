@@ -5,4 +5,5 @@
 /config/databases.php
 /config/propel.yml
 /cache
+composer.lock
 !/cache/.gitignore
