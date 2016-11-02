@@ -18,6 +18,10 @@ class PropelSqlInsertCommand extends SqlInsertCommand
     {
       $options['config-dir']->setDefault(static::CONFIG_DIR);
     }
+    if(isset($options['connection']))
+    {
+      $options['connection']->setDefault(['dev']);
+    }
     $this->getDefinition()->setOptions($options);
     
     $this->setName('propel:sql-insert');
