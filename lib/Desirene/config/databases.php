@@ -15,13 +15,17 @@ if(!file_exists($outputFilePath))
   foreach($connections as $name => $connection)
   {
     $phpConf = ArrayToPhpConverter::convert([
-      'connections'       => [$name => $connection],
-      'defaultConnection' => $configManager->getSection('runtime')['defaultConnection'],
+      'connections'       => ['default' => $connection],
       'log'               => $configManager->getSection('runtime')['log'],
       'profiler'          => $configManager->getConfigProperty('runtime.profiler')
     ]);
     
-    $phpCode .= sprintf("\n\$connections['%s'] = function(){\n%s\n};\n", $name, $phpConf);
+    $phpCode .= sprintf(
+      "\n\$connections['%s'] = function(){\n%s\n%s\n};\n",
+      $name,
+      $phpConf,
+      "\Propel\Runtime\Propel::getServiceContainer()->setDefaultDatasource('default');"
+    );
   }
   
   file_put_contents($outputFilePath, $phpCode);

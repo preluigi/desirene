@@ -106,7 +106,7 @@ eos;
   public static function postAction(\$request, \$response, \$args)
   {
     \$instance = new static;
-    \$instance->importFrom('JSON', \$request->getBody()->getContents());
+    \$instance->fromJSON(\$request->getBody()->getContents());
     \$instance->save();
     \$response->getBody()->write(
       \$instance->toJSON(false)
