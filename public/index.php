@@ -2,14 +2,13 @@
 define("ROOT_DIR",realpath(__DIR__ . '/../'));
 if(!defined('ENV'))
 {
-  define("ENV", 'dev');
+  define("ENV", require ROOT_DIR . '/config/env.php');
 }
 session_start();
-
 require __DIR__ . '/../lib/vendor/autoload.php';
-
 require ROOT_DIR . '/lib/Desirene/config/databases.php';
 
+\Propel\Runtime\Propel::getServiceContainer()->setDefaultDatasource(ENV);
 
 // Instantiate the app
 $settings = require __DIR__ . '/../lib/Desirene/config/settings.php';
