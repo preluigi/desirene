@@ -3,33 +3,85 @@
           xsi:noNamespaceSchemaLocation="http://xsd.propelorm.org/1.6/database.xsd"
           namespace="Model">
   <behavior name="\Desirene\Behavior\RestableBehavior" />
-  <behavior name="versionable">
-    <parameter name="log_created_at" value="true" />
-    <parameter name="log_created_by" value="true" />
-  </behavior>
-
-  <table name="book" phpName="Book">
-    <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
-    <column name="title" type="varchar" size="255" required="true"/>
-    <column name="isbn" type="varchar" size="24" required="true" phpName="ISBN"/>
-    <column name="publisher_id" type="integer" required="true"/>
-    <column name="author_id" type="integer" required="true"/>
-    <foreign-key foreignTable="publisher" phpName="Publisher" refPhpName="Book">
-      <reference local="publisher_id" foreign="id"/>
-    </foreign-key>
-    <foreign-key foreignTable="author">
-      <reference local="author_id" foreign="id"/>
+    
+  <table name="users" phpName="User">
+    <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"></column>
+    <column name="email" type="varchar" size="255" required="true"></column>
+    <column name="password" type="char" size="255" required="true"></column>
+    <column name="first_name" type="varchar" size="255"></column>
+    <column name="last_name" type="varchar" size="255"></column>
+    <column name="telephone" type="varchar" size="20"></column>
+  </table>
+  <table name="groups" phpName="Group">
+    <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"></column>
+    <column name="name" type="varchar" size="255" required="true"></column>
+    <column name="is_staff" type="boolean" default="false"></column>
+    <column name="managed_group_id" type="integer" required="false"></column>
+    <foreign-key foreignTable="groups" phpName="Manages" refPhpName="ManagedBy" onDelete="setnull" onUpdate="cascade">
+      <reference local="managed_group_id" foreign="id"></reference>
     </foreign-key>
   </table>
-
-  <table name="author" phpName="Author">
-    <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
-    <column name="first_name" type="varchar" size="128" required="true"/>
-    <column name="last_name" type="varchar" size="128" required="true"/>
+  <table name="auth_scopes" phpName="AuthScope">
+    <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"></column>
+    <column name="name" type="varchar" size="45" required="true"></column>
+    <column name="is_default" type="boolean" default="false"></column>
   </table>
-
-  <table name="publisher" phpName="Publisher">
-    <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
-    <column name="name" type="varchar" size="128" required="true"/>
+  <table name="groups_auth_scopes" phpName="GroupAuthScope">
+    <column name="group_id" type="integer" required="true" primaryKey="true"></column>
+    <column name="auth_scope_id" type="integer" required="true" primaryKey="true"></column>
+    <foreign-key foreignTable="groups" phpName="Group" refPhpName="GroupAuthScope" onDelete="cascade" onUpdate="cascade">
+      <reference local="group_id" foreign="id"></reference>
+    </foreign-key>
+    <foreign-key foreignTable="auth_scopes" phpName="AuthScope" refPhpName="AuthScopeGroup" onDelete="cascade" onUpdate="cascade">
+      <reference local="auth_scope_id" foreign="id"></reference>
+    </foreign-key>
+  </table>
+  <table name="auth_clients" phpName="AuthClient">
+    <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"></column>
+    <column name="client_id" type="varchar" size="255" required="true"></column>
+    <column name="client_secret" type="varchar" size="255" required="true"></column>
+    <column name="redirect_url" type="varchar" size="255" required="false"></column>
+    <column name="grant_types" type="longvarchar" required="false"></column>
+    <column name="scope" type="longvarchar" required="false"></column>
+  </table>
+  <table name="auth_tokens" phpName="AuthToken">
+    <column name="token" type="varchar" size="255" required="true" primaryKey="true"></column>
+    <column name="type" type="varchar" size="255" required="true"></column>
+    <column name="redirect_url" type="varchar" size="255" required="false"></column>
+    <column name="expires" type="timestamp" required="true"></column>
+    <column name="scope" type="longvarchar" required="false"></column>
+    <column name="user_id" type="integer" required="false"></column>
+    <column name="client_id" type="integer" required="false"></column>
+    <foreign-key foreignTable="users" phpName="User" refPhpName="UserAUthToken" onDelete="cascade" onUpdate="cascade">
+      <reference local="user_id" foreign="id"></reference>
+    </foreign-key>
+    <foreign-key foreignTable="auth_clients" phpName="AuthClient" refPhpName="AuthClientToken" onDelete="cascade" onUpdate="cascade">
+      <reference local="client_id" foreign="id"></reference>
+    </foreign-key>
+  </table>
+  <table name="auth_codes" phpName="AuthCode">
+    <column name="auth_code" type="varchar" size="255" required="true" primaryKey="true"></column>
+    <column name="redirect_url" type="varchar" size="255" required="false"></column>
+    <column name="expires" type="timestamp" required="true"></column>
+    <column name="scope" type="longvarchar" required="false"></column>
+    <column name="user_id" type="integer" required="false"></column>
+    <column name="client_id" type="integer" required="true"></column>
+    <foreign-key foreignTable="users" phpName="User" refPhpName="UserAuthCode" onDelete="cascade" onUpdate="cascade">
+      <reference local="user_id" foreign="id"></reference>
+    </foreign-key>
+    <foreign-key foreignTable="auth_clients" phpName="AuthClient" refPhpName="AuthClientCode" onDelete="cascade" onUpdate="cascade">
+      <reference local="client_id" foreign="id"></reference>
+    </foreign-key>
+  </table>
+  <table name="users_groups" phpName="UserGroup">
+    <column name="user_id" type="integer" required="true"></column>
+    <column name="group_id" type="integer" required="true"></column>
+    <foreign-key foreignTable="users" phpName="User" refPhpName="UserGroup" onDelete="cascade" onUpdate="cascade">
+      <reference local="user_id" foreign="id"></reference>
+    </foreign-key>
+    <foreign-key foreignTable="groups" phpName="Group" refPhpName="GroupUser" onDelete="cascade" onUpdate="cascade">
+      <reference local="group_id" foreign="id"></reference>
+    </foreign-key>
   </table>
 </database>
+
