@@ -107,6 +107,14 @@ eos;
   {
     \$instance = new static;
     \$instance->fromJSON(\$request->getBody()->getContents());
+    foreach(\$args as \$key => \$value)
+    {
+      \$setMethod = 'set' . str_replace(' ', '', ucwords(str_replace('_', ' ', \$key)));
+      if(method_exists(\$instance, \$setMethod))
+      {
+        \$instance->\$setMethod(\$value);
+      }
+    }
     \$instance->save();
     \$response->getBody()->write(
       \$instance->toJSON(false)
