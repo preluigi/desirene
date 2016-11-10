@@ -23,4 +23,9 @@ class User extends BaseUser
       $this->password = sha1($value);
     }
   }
+  
+  public function getPassword()
+  {
+    return null;
+  }
 }
