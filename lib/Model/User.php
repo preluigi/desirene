@@ -16,5 +16,11 @@ use Model\Base\User as BaseUser;
  */
 class User extends BaseUser
 {
-
+  public function setPassword($value)
+  {
+    if(!empty($value))
+    {
+      $this->password = sha1($value);
+    }
+  }
 }
