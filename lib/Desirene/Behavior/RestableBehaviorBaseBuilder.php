@@ -41,7 +41,7 @@ eos;
     $script .= <<<eos
 
     
-{$this->addRestMethods()}
+{$this->addRestMethods($this->getStubObjectBuilder()->getClassName())}
 eos;
     $this->generateRoutingFile();
   }
@@ -64,7 +64,7 @@ eos;
     $writer->writeRoutes($baseRouteName, $this->getStubObjectBuilder()->getClassName(), $this->getTable()->getPrimaryKey());
   }
   
-  protected function addRestMethods()
+  protected function addRestMethods($modelName)
   {
     return <<< eos
   public static function listAction(\$request, \$response, \$args)
@@ -105,19 +105,34 @@ eos;
 
   public static function postAction(\$request, \$response, \$args)
   {
-    \$instance = new static;
-    \$instance->fromJSON(\$request->getBody()->getContents());
-    foreach(\$args as \$key => \$value)
+    \$payload = json_decode(\$request->getBody()->getContents());
+    \$payload = is_array(\$payload) ? \$payload : [\$payload];
+    
+    \$insertedObjects = new \\Propel\\Runtime\\Collection\\ObjectCollection;
+    \$insertedObjects->setModel('$modelName');
+    
+    foreach(\$payload as \$reqObject)
     {
-      \$setMethod = 'set' . str_replace(' ', '', ucwords(str_replace('_', ' ', \$key)));
-      if(method_exists(\$instance, \$setMethod))
+      \$instance = new static;
+      \$instance->fromArray((array)\$reqObject);
+      
+      foreach(\$args as \$key => \$value)
       {
-        \$instance->\$setMethod(\$value);
+        \$setMethod = 'set' . str_replace(' ', '', ucwords(str_replace('_', ' ', \$key)));
+        if(method_exists(\$instance, \$setMethod))
+        {
+          \$instance->\$setMethod(\$value);
+        }
       }
+      \$instance->save();
+      
+      \$insertedObjects->push(\$instance);
     }
-    \$instance->save();
+    
+    \$insertedObjects = \$insertedObjects->count() == 1 ? \$insertedObjects->pop() : \$insertedObjects;
+    
     \$response->getBody()->write(
-      \$instance->toJSON(false)
+      \$insertedObjects->toJSON(false)
     );
     
     return \$response->withHeader('Content-type', 'application/json');
