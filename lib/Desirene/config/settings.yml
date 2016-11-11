@@ -8,3 +8,21 @@ dev:
     name: 'desirene-app'
     path: 'logs/app.log'
     level: 'DEBUG'
+
+stage:
+  settings:
+    displayErrorDetails: false
+    addContentLengthHeader: true
+  logger:
+    name: 'desirene-app'
+    path: 'logs/app.log'
+    level: 'DEBUG'
+    
+prod:
+  settings:
+    displayErrorDetails: false
+    addContentLengthHeader: true
+  logger:
+    name: 'desirene-app'
+    path: 'logs/app.log'
+    level: 'DEBUG'

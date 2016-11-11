@@ -3,7 +3,7 @@
 /lib/Model/Map
 /lib/Model/Rest
 /config/databases.php
-/config/propel.yml
+# /config/propel.yml
 /cache
 composer.lock
 !/cache/.gitignore
