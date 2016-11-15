@@ -15,6 +15,7 @@ $settings = require __DIR__ . '/../lib/Desirene/config/settings.php';
 $app = new \Slim\App($settings);
 
 require __DIR__ . '/../lib/Desirene/config/dependencies.php';
+require __DIR__ . '/../lib/Desirene/config/middleware.php';
 require __DIR__ . '/../config/dependencies.php';
 
 require __DIR__ . '/../lib/Desirene/config/routing.php';
