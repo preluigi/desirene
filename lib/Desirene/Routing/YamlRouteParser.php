@@ -24,7 +24,10 @@ class YamlRouteParser
       {
         $fpCacheFile = fopen($this->cacheDir . '/' . $cacheFilename, 'w');
         fwrite($fpCacheFile, "<?php\n");
-        fwrite($fpCacheFile, "\$this->app->options('/[{uri:.*}]', function(\$request, \$response, \$attrs = null){})->setName('preflight');\n");
+        if('routes.yml' == $filename)
+        {
+          fwrite($fpCacheFile, "\$this->app->options('/[{uri:.*}]', function(\$request, \$response, \$attrs = null){})->setName('preflight');\n");
+        }
         $routes = Yaml::parse(file_get_contents($file));
         foreach((array)$routes as $name => $config)
         {

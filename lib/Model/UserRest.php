@@ -8,5 +8,4 @@ use \Model\Rest\BaseUserRest as BaseUserRest;
  */
 class UserRest extends BaseUserRest
 {
-
 }

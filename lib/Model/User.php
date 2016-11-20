@@ -2,6 +2,7 @@
 
 namespace Model;
 
+use League\OAuth2\Server\Entities\UserEntityInterface;
 use Model\Base\User as BaseUser;
 
 /**
@@ -14,18 +15,33 @@ use Model\Base\User as BaseUser;
  * long as it does not already exist in the output directory.
  *
  */
-class User extends BaseUser
+class User extends BaseUser implements UserEntityInterface
 {
   public function setPassword($value)
   {
     if(!empty($value))
     {
-      $this->password = sha1($value);
+      $this->password = password_hash($value, PASSWORD_BCRYPT);
     }
   }
   
   public function getPassword()
   {
     return null;
+  }
+  
+  public function getPasswordHash()
+  {
+    return $this->password;
+  }
+  
+  public function checkPassword($password)
+  {
+    return password_verify($password, $this->password);
+  }
+  
+  public function getIdentifier()
+  {
+    return $this->getId();
   }
 }

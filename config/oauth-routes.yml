@@ -1,0 +1,9 @@
+authorize:
+  url: /authorize
+  method: get
+  action: '\Desirene\OAuth2\Controllers\AuthController:authorize'
+
+access_token:
+  url: /access_token
+  method: post
+  action: '\Desirene\OAuth2\Controllers\AuthController:accessToken'

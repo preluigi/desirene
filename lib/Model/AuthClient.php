@@ -2,6 +2,7 @@
 
 namespace Model;
 
+use Desirene\OAuth2\Entities\ClientEntity;
 use Model\Base\AuthClient as BaseAuthClient;
 
 /**
@@ -16,5 +17,18 @@ use Model\Base\AuthClient as BaseAuthClient;
  */
 class AuthClient extends BaseAuthClient
 {
-
+  public function toClientEntity()
+  {
+    $client = new ClientEntity;
+    $client->setIdentifier($this->getId());
+    $client->setName($this->getClientId());
+    $client->setRedirectUri($this->getRedirectUrl());
+    
+    return $client;
+  }
+  
+  public function checkSecret($secret)
+  {
+    return password_verify($secret, $this->client_secret);
+  }
 }

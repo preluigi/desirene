@@ -2,6 +2,7 @@
 
 namespace Model;
 
+use Desirene\OAuth2\Entities\ScopeEntity;
 use Model\Base\AuthScope as BaseAuthScope;
 
 /**
@@ -16,5 +17,11 @@ use Model\Base\AuthScope as BaseAuthScope;
  */
 class AuthScope extends BaseAuthScope
 {
-
+  public function toScopeEntity()
+  {
+    $scope = new ScopeEntity;
+    $scope->setIdentifier($this->getName());
+    
+    return $scope;
+  }
 }

@@ -16,5 +16,13 @@ use Model\Base\AuthToken as BaseAuthToken;
  */
 class AuthToken extends BaseAuthToken
 {
-
+  public function setScope($scope)
+  {
+    parent::setScope(json_encode($scope));
+  }
+  
+  public function getScope()
+  {
+    return json_decode(parent::getScope());
+  }
 }
