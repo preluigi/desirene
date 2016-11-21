@@ -45,7 +45,7 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
       (
         $token->getExpires() instanceof DateTimeInterface
         &&
-        $token->getExpires() < (new DateTime)
+        $token->getExpires() > (new DateTime)
       )
     )
     {

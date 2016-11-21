@@ -9,6 +9,7 @@ use League\OAuth2\Server\ResourceServer;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Grant\PasswordGrant;
 use League\OAuth2\Server\Grant\AuthCodeGrant;
+use League\OAuth2\Server\Grant\RefreshTokenGrant;
 $ci = $app->getContainer();
 
 $ci['router'] = function($container)
@@ -70,9 +71,21 @@ $ci[AuthorizationServer::class] = function($container)
     new \DateInterval('PT1H')
   );
   
+  $refreshTokenRepository = new RefreshTokenRepository;
+  
   $grant = new PasswordGrant(
     new UserRepository,
-    new RefreshTokenRepository
+    $refreshTokenRepository
+  );
+  $grant->setRefreshTokenTTL(new \DateInterval('P1M'));
+  
+  $server->enableGrantType(
+    $grant,
+    new \DateInterval('PT1H')
+  );
+  
+  $grant = new RefreshTokenGrant(
+    $refreshTokenRepository
   );
   $grant->setRefreshTokenTTL(new \DateInterval('P1M'));
   

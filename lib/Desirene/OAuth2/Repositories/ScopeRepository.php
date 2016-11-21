@@ -20,6 +20,25 @@ class ScopeRepository implements ScopeRepositoryInterface
   
   public function finalizeScopes(array $scopes, $grantType, ClientEntityInterface $clientEntity, $userIdentifier = null)
   {
+    if($userIdentifier)
+    {
+      $user = UserQuery::create()->findOneById($userIdentifier);
+      
+      foreach($user->getUserGroupsJoinGroup() as $userGroup)
+      {
+        $group = $userGroup->getGroup();
+        $authScopes = $group->getGroupAuthScopesJoinAuthScope();
+        
+        
+        
+        foreach($userGroup->getGroup()->getGroupAuthScopesJoinAuthScope() as $groupScope)
+        {
+          $s = new ScopeEntity;
+          $s->setIdentifier($groupScope->getAuthScope()->getName());
+          $scopes[] = $s;
+        }
+      }
+    }
     return $scopes;
   }
 }
