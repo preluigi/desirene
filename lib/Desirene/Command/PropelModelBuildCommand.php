@@ -4,20 +4,7 @@ use Propel\Generator\Command\ModelBuildCommand;
 
 class PropelModelBuildCommand extends ModelBuildCommand
 {
-  const CONFIG_DIR = '../config';
+  protected $cmdName = "propel:build";
   
-  public function configure()
-  {
-    parent::configure();
-    
-    $options = $this->getDefinition()->getOptions();
-    if(isset($options['config-dir']))
-    {
-      $options['config-dir']->setDefault(static::CONFIG_DIR);
-    }
-    $this->getDefinition()->setOptions($options);
-    
-    $this->setName('propel:build');
-    $this->setAliases([]);
-  }
+  use PropelConfigurationCommandTrait;
 }
