@@ -37,31 +37,34 @@ trait PropelConfigurationCommandTrait
   public function execute(InputInterface $input, OutputInterface $output)
   {
     
-    $connections = $input->getOption('connection') ?? [require(ROOT_DIR . '/env.php')];
-    
-    foreach($connections as &$connection)
+    if($input->hasOption('connection'))
     {
-      if(false === strpos($connection, ':'))
+      $connections = $input->getOption('connection') ?? [require(ROOT_DIR . '/env.php')];
+      
+      foreach($connections as &$connection)
       {
-        $propelConfig = Yaml::parse(file_get_contents(ROOT_DIR . '/config/propel.yml.dist'));
-        $propelConfig = array_replace_recursive($propelConfig, Yaml::parse(file_get_contents(ROOT_DIR . '/config/propel.yml')));
-        
-        $propelConnections = $propelConfig['propel']['database']['connections'];
-        
-        $connectionConfig = $propelConnections[$connection] ?? null;
-        
-        if(null === $connectionConfig)
+        if(false === strpos($connection, ':'))
         {
-          unset($connection);
-        }
-        else
-        {
-          $connection = sprintf("%s=%s;user=%s;password=%s", 'default', preg_replace("/;port=([0-9]+)/", "", $connectionConfig['dsn']), $connectionConfig['user'], $connectionConfig['password']);
+          $propelConfig = Yaml::parse(file_get_contents(ROOT_DIR . '/config/propel.yml.dist'));
+          $propelConfig = array_replace_recursive($propelConfig, Yaml::parse(file_get_contents(ROOT_DIR . '/config/propel.yml')));
+          
+          $propelConnections = $propelConfig['propel']['database']['connections'];
+          
+          $connectionConfig = $propelConnections[$connection] ?? null;
+          
+          if(null === $connectionConfig)
+          {
+            unset($connection);
+          }
+          else
+          {
+            $connection = sprintf("%s=%s;user=%s;password=%s", 'default', preg_replace("/;port=([0-9]+)/", "", $connectionConfig['dsn']), $connectionConfig['user'], $connectionConfig['password']);
+          }
         }
       }
+      
+      $input->setOption('connection', $connections);
     }
-    
-    $input->setOption('connection', $connections);
     
     parent::execute($input, $output);
   }
