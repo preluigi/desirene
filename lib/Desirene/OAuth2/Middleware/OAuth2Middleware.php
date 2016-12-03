@@ -23,7 +23,7 @@ class OAuth2Middleware
   {
     $route = $request->getAttribute('route');
     
-    if($request->isOptions())
+    if(!$route || $request->isOptions())
     {
       return $next($request, $response);
     }
