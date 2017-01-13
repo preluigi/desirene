@@ -96,8 +96,13 @@ eos;
         \$query->\$filterMethod(\$value);
       }
     }
+    \$instance = \$query->findOne();
+    if(null == \$instance)
+    {
+      return \$response->withStatus(404);
+    }
     \$response->getBody()->write(
-      (\$instance = \$query->findOne()) ? \$instance->toJSON(false) : null
+      \$instance->toJSON(false)
     );
     
     return \$response->withHeader('Content-type', 'application/json');
@@ -150,6 +155,10 @@ eos;
       }
     }
     \$instance = \$query->findOne();
+    if(null == \$instance)
+    {
+      return \$response->withStatus(404);
+    }
     \$instance->importFrom('JSON', \$request->getBody()->getContents());
     \$instance->save();
     \$response->getBody()->write(
@@ -171,6 +180,10 @@ eos;
       }
     }
     \$instance = \$query->findOne();
+    if(null == \$instance)
+    {
+      return \$response->withStatus(404);
+    }
     \$instance->importFrom('JSON', \$request->getBody()->getContents());
     \$instance->save();
     \$response->getBody()->write(
@@ -192,6 +205,10 @@ eos;
       }
     }
     \$instance = \$query->findOne();
+    if(null == \$instance)
+    {
+      return \$response->withStatus(404);
+    }
     \$instance->delete();
     \$response->getBody()->write(
       \$instance->toJSON(false)
