@@ -20,6 +20,7 @@
     "autoload": {
         "psr-4": {
             "Model\\": "lib/Model/",
+            "Command\\": "lib/Command/",
             "Controller\\": "controller/",
             "Desirene\\": "lib/Desirene/"
         }
