@@ -1,2 +1,2 @@
 <?php
-return "dev";
+return getenv('DOL_ENV') ?: "dev";
